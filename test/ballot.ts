@@ -1,10 +1,12 @@
 import { ethers } from "hardhat";
 import chai from "chai";
+import chaiAsPromised from "chai-as-promised";
 import { solidity } from "ethereum-waffle";
 import { Ballot } from "../typechain/Ballot";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 chai.use(solidity);
+chai.use(chaiAsPromised);
 const { expect } = chai;
 const nullAddress = "0x0000000000000000000000000000000000000000";
 
@@ -58,7 +60,9 @@ describe("Ballot", () => {
         // give right to vote for signer 1
         await ballotContract.giveRightToVote(signers[1].address);
       };
-      expect(testFunc).to.throw;
+      await expect(testFunc()).to.be.rejectedWith(
+        "Only chairperson can give right to vote."
+      );
     });
 
     it("cannot regive right to the same person", async () => {
@@ -69,21 +73,21 @@ describe("Ballot", () => {
 
         await ballot.giveRightToVote(signers[1].address);
       };
-      expect(testFunc).to.throw;
+      await expect(testFunc()).to.be.rejectedWith();
     });
 
     it("cannot give right to already-voted person", async () => {
       const testFunc = async () => {
         await ballot.giveRightToVote(signers[1].address);
 
-        const ballotContract = await getBallotContract(signers[2]);
+        const ballotContract = await getBallotContract(signers[1]);
         await ballotContract.vote(0);
         const voter1 = await ballot.voters(signers[1].address);
         expect(voter1.voted).to.true;
 
         await ballot.giveRightToVote(signers[1].address);
       };
-      expect(testFunc).to.throw;
+      await expect(testFunc()).to.be.rejectedWith("The voter already voted.");
     });
   });
 
@@ -121,7 +125,7 @@ describe("Ballot", () => {
 
           await ballotContract.vote(1);
         };
-        expect(testFunc).to.throw;
+        await expect(testFunc()).to.be.rejectedWith("Already voted.");
       });
 
       it("cannot vote if have no right", async () => {
@@ -134,7 +138,7 @@ describe("Ballot", () => {
 
           await ballotContract.vote(0);
         };
-        expect(testFunc).to.throw;
+        await expect(testFunc()).to.be.rejectedWith("Has no right to vote");
       });
     });
 
@@ -156,13 +160,11 @@ describe("Ballot", () => {
         const testFunc = async () => {
           const ballotContract = await getBallotContract(signers[1]);
 
-          const voter = await ballot.voters(signers[1].address);
-          expect(voter.weight).to.greaterThan(0);
-          expect(voter.voted).to.false;
-
           await ballotContract.delegate(signers[1].address);
         };
-        expect(testFunc).to.throw;
+        await expect(testFunc()).to.be.rejectedWith(
+          "Self-delegation is disallowed."
+        );
       });
 
       it("voted person cannot delegate", async () => {
@@ -175,7 +177,7 @@ describe("Ballot", () => {
 
           await ballotContract.delegate(signers[2].address);
         };
-        expect(testFunc).to.throw;
+        await expect(testFunc()).to.be.rejectedWith("You already voted.");
       });
     });
 
