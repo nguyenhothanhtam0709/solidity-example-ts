@@ -1,6 +1,5 @@
 # Introduction
-A simple project to test & deploy solidity using hardhat & typescript.  
-See [The New Solidity Dev Stack: Hardhat + Ethers + Waffle + Typescript [Tutorial]](https://rahulsethuram.medium.com/the-new-solidity-dev-stack-buidler-ethers-waffle-typescript-tutorial-f07917de48ae) for more information.
+A simple project contain some solidity example, using hardhat & typescript for test and deploy.
 
 # Project setup
 Before setup, using `nvm use` to select correct node version.
