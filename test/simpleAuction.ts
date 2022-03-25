@@ -53,7 +53,7 @@ describe('Simple Auction', () => {
 		});
 
 		describe('bid', async () => {
-			it('should pid', async () => {
+			it('should bid', async () => {
 				const auctionContract = await getAuctionContract(signers[1]);
 				await auctionContract.bid({
 					value: 10,
@@ -63,7 +63,7 @@ describe('Simple Auction', () => {
 				expect(await auction.highestBid()).to.eq(10);
 			});
 
-			it('should repid', async () => {
+			it('should re-bid', async () => {
 				const auctionContract = await getAuctionContract(signers[1]);
 				await auctionContract.bid({
 					value: 10,
@@ -76,7 +76,7 @@ describe('Simple Auction', () => {
 				expect(await auction.highestBid()).to.eq(15);
 			});
 
-			it('should pid 2', async () => {
+			it('should bid 2', async () => {
 				const auctionContract1 = await getAuctionContract(signers[1]);
 				await auctionContract1.bid({
 					value: 10,
@@ -91,7 +91,7 @@ describe('Simple Auction', () => {
 				expect(await auction.highestBid()).to.eq(15);
 			});
 
-			it('cannot pid with smaller value than current highestPid', async () => {
+			it('cannot bid with smaller value than current highestBid', async () => {
 				const testFunc = async () => {
 					const auctionContract1 = await getAuctionContract(signers[1]);
 					await auctionContract1.bid({
