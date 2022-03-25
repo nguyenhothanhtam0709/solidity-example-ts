@@ -143,7 +143,7 @@ describe("Ballot", () => {
         // call ballot as siger 1
         const ballotContract = await getBallotContract(signers[1]);
 
-        await ballotContract.deligate(signers[2].address);
+        await ballotContract.delegate(signers[2].address);
 
         const voter1 = await ballot.voters(signers[1].address);
         const voter2 = await ballot.voters(signers[2].address);
@@ -160,7 +160,7 @@ describe("Ballot", () => {
           expect(voter.weight).to.greaterThan(0);
           expect(voter.voted).to.false;
 
-          await ballotContract.deligate(signers[1].address);
+          await ballotContract.delegate(signers[1].address);
         };
         expect(testFunc).to.throw;
       });
@@ -173,7 +173,7 @@ describe("Ballot", () => {
           const voter = await ballot.voters(signers[1].address);
           expect(voter.voted).to.true;
 
-          await ballotContract.deligate(signers[2].address);
+          await ballotContract.delegate(signers[2].address);
         };
         expect(testFunc).to.throw;
       });
